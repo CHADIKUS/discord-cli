@@ -12,7 +12,7 @@ local TOKEN="USER TOKEN HERE"
 
 --discord doesnt allow "unverified bots" to view the contents of a message, but still recieves it, so i will detect when a message is sent then get the most recent message with a request
 
-local CURRENT_CHANNEL = "957491338859937822"
+local CURRENT_CHANNEL = "TEXT CHANNEL"
 
 
 client:on("ready", function()
