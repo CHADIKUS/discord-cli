@@ -12,7 +12,7 @@ local TOKEN="USER TOKEN HERE"
 
 --discord doesnt allow "unverified bots" to view the contents of a message, but still recieves it, so i will detect when a message is sent then get the most recent message with a request
 
-local CURRENT_CHANNEL = "TEXT CHANNEL"
+local CURRENT_CHANNEL = "TEXT CHANNEL ID"
 
 
 client:on("ready", function()
@@ -32,12 +32,15 @@ client:on("messageCreate", function(message)
         local CHANNEL_DATA = client:getChannel(CURRENT_CHANNEL)
 
         local channel_name = CHANNEL_DATA.name
+        local guild_name = CHANNEL_DATA.parent.name
+
         --if the user is in a DM
         if CHANNEL_DATA.type == 1 then
             channel_name = CHANNEL_DATA.name .. "'s DMs"
+            guild_name = "DMs"
         end
 
-        getMessage(CURRENT_CHANNEL, message.author.name, channel_name)       
+        getMessage(CURRENT_CHANNEL, message.author.name, channel_name, guild_name)       
     end
 
     -- for k, v in pairs(client.guilds) do
@@ -57,7 +60,7 @@ client:on("messageCreate", function(message)
 end)
 
 
-function getMessage(channel_id, author, channel_name)
+function getMessage(channel_id, author, channel_name, guild_name)
     coroutine.wrap(function ()
         local url = "https://discord.com/api/v8/channels/".. channel_id .."/messages"
         local header = {{"authorization", TOKEN}}
@@ -65,7 +68,7 @@ function getMessage(channel_id, author, channel_name)
          
         local jsonData = json.decode(body)
         
-        print("sent in: " .. channel_name .."\n".. author .. ": " ..jsonData[1]["content"] .. "\n")
+        print("sent in: " .. channel_name .. " in: " .. guild_name .. "\n".. author .. ": " ..jsonData[1]["content"] .. "\n")
         
       end)()
       
@@ -98,6 +101,8 @@ local function onLine(err, line, ...)
         process:exit()
     end
 end
+
+
 
 client:run(TOKEN,{afk=true})
 editor:readLine(prompt, onLine)
